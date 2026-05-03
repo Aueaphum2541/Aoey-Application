@@ -1,0 +1,3013 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Stroke Swallow & Speech Rehab Lab</title>
+  <style>
+    :root {
+      --bg: #f6f8fb;
+      --surface: #ffffff;
+      --surface-2: #eef4f7;
+      --ink: #18212f;
+      --muted: #607086;
+      --line: #d9e2ec;
+      --blue: #2563eb;
+      --teal: #0f766e;
+      --green: #15803d;
+      --amber: #b45309;
+      --red: #b91c1c;
+      --violet: #6d28d9;
+      --shadow: 0 14px 36px rgba(24, 33, 47, 0.08);
+      --radius: 8px;
+      --font: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Tahoma, "Noto Sans Thai", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font);
+      line-height: 1.48;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.55;
+    }
+
+    a {
+      color: var(--blue);
+    }
+
+    .app-shell {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr);
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      background: #172033;
+      color: #f7fbff;
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      border-right: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .brand {
+      display: grid;
+      gap: 6px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+    }
+
+    .brand-title {
+      font-weight: 800;
+      font-size: 21px;
+      line-height: 1.15;
+      letter-spacing: 0;
+    }
+
+    .brand-subtitle {
+      color: #bdc8d9;
+      font-size: 13px;
+    }
+
+    .status-strip {
+      display: grid;
+      gap: 10px;
+    }
+
+    .status-tile {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.11);
+      border-radius: var(--radius);
+      padding: 12px;
+    }
+
+    .status-tile b {
+      display: block;
+      font-size: 12px;
+      color: #b9c6d8;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .status-tile span {
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .nav {
+      display: grid;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .nav button {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      align-items: center;
+      gap: 9px;
+      background: transparent;
+      color: #d7e3f3;
+      padding: 10px 10px;
+      border-radius: var(--radius);
+      text-align: left;
+      min-height: 44px;
+    }
+
+    .nav button:hover,
+    .nav button.active {
+      background: #25324b;
+      color: #fff;
+    }
+
+    .nav-icon {
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      font-weight: 800;
+      font-size: 12px;
+    }
+
+    .sidebar-note {
+      margin-top: auto;
+      color: #ccd6e3;
+      font-size: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.14);
+      padding-top: 14px;
+    }
+
+    .main {
+      min-width: 0;
+      padding: 24px 28px 44px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .page-title {
+      display: grid;
+      gap: 4px;
+    }
+
+    .page-title h1 {
+      margin: 0;
+      font-size: 29px;
+      line-height: 1.18;
+      letter-spacing: 0;
+    }
+
+    .page-title p {
+      margin: 0;
+      color: var(--muted);
+      max-width: 900px;
+    }
+
+    .top-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .section {
+      display: none;
+    }
+
+    .section.active {
+      display: grid;
+      gap: 18px;
+    }
+
+    .band {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+
+    .band.flat {
+      box-shadow: none;
+    }
+
+    .band-title {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .band-title h2,
+    .band-title h3 {
+      margin: 0;
+      line-height: 1.22;
+      letter-spacing: 0;
+    }
+
+    .band-title h2 {
+      font-size: 20px;
+    }
+
+    .band-title h3 {
+      font-size: 17px;
+    }
+
+    .band-title p {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 16px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .field {
+      display: grid;
+      gap: 7px;
+    }
+
+    .field label,
+    .check-title {
+      font-size: 13px;
+      color: #334155;
+      font-weight: 700;
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      min-height: 42px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      border-radius: 7px;
+      padding: 9px 10px;
+      outline: none;
+    }
+
+    .field textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    .checks {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .check {
+      min-height: 42px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 9px 10px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #fff;
+      color: #283548;
+      font-size: 14px;
+    }
+
+    .check input {
+      width: 17px;
+      height: 17px;
+      flex: 0 0 auto;
+    }
+
+    .safety-box {
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      padding: 14px;
+      background: #f8fafc;
+      display: grid;
+      gap: 8px;
+    }
+
+    .safety-box.safe {
+      border-color: rgba(21, 128, 61, 0.35);
+      background: #eef9f0;
+    }
+
+    .safety-box.watch {
+      border-color: rgba(180, 83, 9, 0.35);
+      background: #fff7ed;
+    }
+
+    .safety-box.stop {
+      border-color: rgba(185, 28, 28, 0.35);
+      background: #fff1f2;
+    }
+
+    .safety-box strong {
+      font-size: 18px;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .small {
+      font-size: 12px;
+    }
+
+    .btn {
+      min-height: 42px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 9px 13px;
+      border-radius: 7px;
+      background: #e8eef7;
+      color: #1f2a3d;
+      font-weight: 800;
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+
+    .btn:hover {
+      filter: brightness(0.985);
+    }
+
+    .btn.primary {
+      background: var(--blue);
+      color: #fff;
+    }
+
+    .btn.teal {
+      background: var(--teal);
+      color: #fff;
+    }
+
+    .btn.green {
+      background: var(--green);
+      color: #fff;
+    }
+
+    .btn.amber {
+      background: #f59e0b;
+      color: #271900;
+    }
+
+    .btn.red {
+      background: var(--red);
+      color: #fff;
+    }
+
+    .btn.ghost {
+      background: #fff;
+      border-color: var(--line);
+      color: #2f3b4f;
+    }
+
+    .btn.small-btn {
+      min-height: 34px;
+      padding: 6px 10px;
+      font-size: 13px;
+    }
+
+    .btn.icon {
+      width: 42px;
+      padding: 0;
+      flex: 0 0 auto;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .pill {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #fff;
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 800;
+      color: #334155;
+    }
+
+    .pill.green {
+      background: #ecfdf3;
+      border-color: rgba(21, 128, 61, 0.25);
+      color: var(--green);
+    }
+
+    .pill.amber {
+      background: #fff7ed;
+      border-color: rgba(180, 83, 9, 0.24);
+      color: var(--amber);
+    }
+
+    .pill.red {
+      background: #fff1f2;
+      border-color: rgba(185, 28, 28, 0.24);
+      color: var(--red);
+    }
+
+    .pill.blue {
+      background: #eff6ff;
+      border-color: rgba(37, 99, 235, 0.24);
+      color: var(--blue);
+    }
+
+    .alert {
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      gap: 12px;
+      align-items: flex-start;
+      border-radius: var(--radius);
+      padding: 13px 14px;
+      border: 1px solid rgba(180, 83, 9, 0.24);
+      background: #fff7ed;
+      color: #4b3208;
+    }
+
+    .alert strong {
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .alert .mark {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      background: #f59e0b;
+      color: #241700;
+      border-radius: 7px;
+      font-weight: 900;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .metric {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 13px;
+      background: #fff;
+      min-height: 92px;
+      display: grid;
+      align-content: space-between;
+      gap: 8px;
+    }
+
+    .metric span {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .metric b {
+      font-size: 23px;
+      line-height: 1;
+    }
+
+    .meter-wrap {
+      display: grid;
+      gap: 9px;
+    }
+
+    .meter {
+      height: 18px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #22c55e 0%, #eab308 45%, #f97316 70%, #dc2626 100%);
+      overflow: hidden;
+      position: relative;
+      border: 1px solid rgba(0, 0, 0, 0.07);
+    }
+
+    .meter::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.28);
+    }
+
+    .meter-needle {
+      position: absolute;
+      top: -5px;
+      width: 3px;
+      height: 28px;
+      border-radius: 3px;
+      background: #111827;
+      left: 0;
+      transform: translateX(-1px);
+      z-index: 2;
+      transition: left 220ms ease;
+    }
+
+    .canvas-wrap {
+      display: grid;
+      gap: 10px;
+    }
+
+    canvas {
+      width: 100%;
+      display: block;
+      border: 1px solid var(--line);
+      background: #0f172a;
+      border-radius: var(--radius);
+    }
+
+    #waveCanvas {
+      height: 170px;
+    }
+
+    #spectrogramCanvas {
+      height: 120px;
+    }
+
+    #trendCanvas,
+    #speechTrendCanvas {
+      height: 260px;
+      background: #fff;
+    }
+
+    .result-panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+      padding: 14px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .result-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .risk-label {
+      font-size: 22px;
+      font-weight: 900;
+      line-height: 1.15;
+    }
+
+    .feature-table,
+    .history-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .feature-table th,
+    .feature-table td,
+    .history-table th,
+    .history-table td {
+      text-align: left;
+      padding: 9px 8px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+    }
+
+    .feature-table th,
+    .history-table th {
+      color: #475569;
+      font-size: 12px;
+      background: #f8fafc;
+    }
+
+    .history-table tbody tr:hover {
+      background: #f8fafc;
+    }
+
+    .exercise-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .exercise {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: var(--radius);
+      padding: 13px;
+    }
+
+    .exercise h4 {
+      margin: 0 0 3px;
+      font-size: 15px;
+    }
+
+    .exercise p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .segmented {
+      display: inline-flex;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .segmented button {
+      min-height: 38px;
+      padding: 7px 11px;
+      background: #fff;
+      color: #334155;
+      font-weight: 800;
+      border-right: 1px solid var(--line);
+    }
+
+    .segmented button:last-child {
+      border-right: 0;
+    }
+
+    .segmented button.active {
+      background: #dbeafe;
+      color: #1d4ed8;
+    }
+
+    .phrase-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .phrase-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+      padding: 14px;
+      display: grid;
+      gap: 12px;
+      min-height: 178px;
+    }
+
+    .phrase-card .target {
+      font-weight: 900;
+      font-size: 18px;
+      line-height: 1.35;
+      word-break: break-word;
+    }
+
+    .phrase-card .desc {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .score-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 9px 10px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #f8fafc;
+      min-height: 44px;
+      font-size: 13px;
+    }
+
+    .large-score {
+      font-weight: 900;
+      font-size: 25px;
+    }
+
+    .camera-box {
+      position: relative;
+      background: #111827;
+      border-radius: var(--radius);
+      overflow: hidden;
+      min-height: 360px;
+      border: 1px solid var(--line);
+    }
+
+    .camera-box video {
+      width: 100%;
+      height: 100%;
+      min-height: 360px;
+      object-fit: cover;
+      transform: scaleX(-1);
+      display: block;
+      background: #111827;
+    }
+
+    .camera-grid {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(90deg, transparent calc(50% - 1px), rgba(255, 255, 255, 0.85) calc(50% - 1px), rgba(255, 255, 255, 0.85) calc(50% + 1px), transparent calc(50% + 1px)),
+        linear-gradient(0deg, transparent calc(50% - 1px), rgba(255, 255, 255, 0.35) calc(50% - 1px), rgba(255, 255, 255, 0.35) calc(50% + 1px), transparent calc(50% + 1px));
+    }
+
+    .camera-help {
+      position: absolute;
+      left: 12px;
+      right: 12px;
+      bottom: 12px;
+      background: rgba(15, 23, 42, 0.74);
+      color: #fff;
+      border-radius: 7px;
+      padding: 9px 10px;
+      font-size: 13px;
+    }
+
+    .rating-row {
+      display: grid;
+      grid-template-columns: 180px minmax(0, 1fr) 48px;
+      gap: 10px;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .rating-row:last-child {
+      border-bottom: 0;
+    }
+
+    input[type="range"] {
+      accent-color: var(--blue);
+    }
+
+    .timer {
+      font-variant-numeric: tabular-nums;
+      font-weight: 900;
+      font-size: 21px;
+    }
+
+    .empty {
+      border: 1px dashed #b8c3d1;
+      border-radius: var(--radius);
+      padding: 20px;
+      color: var(--muted);
+      background: #fbfdff;
+      text-align: center;
+    }
+
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      max-width: min(420px, calc(100vw - 36px));
+      background: #111827;
+      color: #fff;
+      padding: 12px 14px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      z-index: 99;
+      opacity: 0;
+      transform: translateY(12px);
+      pointer-events: none;
+      transition: 180ms ease;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 1120px) {
+      .app-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: relative;
+        height: auto;
+        padding: 16px;
+      }
+
+      .nav {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+      }
+
+      .nav button {
+        grid-template-columns: 1fr;
+        justify-items: center;
+        text-align: center;
+        font-size: 12px;
+      }
+
+      .nav-icon {
+        display: none;
+      }
+
+      .sidebar-note,
+      .status-strip {
+        display: none;
+      }
+
+      .main {
+        padding: 18px;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .grid-2,
+      .grid-3,
+      .grid-4,
+      .form-grid,
+      .phrase-grid,
+      .metric-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar,
+      .band-title,
+      .result-head {
+        display: grid;
+        justify-content: initial;
+      }
+
+      .top-actions {
+        justify-content: flex-start;
+      }
+
+      .checks {
+        grid-template-columns: 1fr;
+      }
+
+      .rating-row {
+        grid-template-columns: 1fr;
+      }
+
+      .nav {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 520px) {
+      .main {
+        padding: 14px;
+      }
+
+      .page-title h1 {
+        font-size: 23px;
+      }
+
+      .band {
+        padding: 14px;
+      }
+
+      .button-row {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+
+      .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-title">Stroke Swallow & Speech Rehab Lab</div>
+        <div class="brand-subtitle">คัดกรองการกลืน ติดตาม rehab และฝึกพูด ไทย/อังกฤษ ในเครื่องของคุณ</div>
+      </div>
+
+      <div class="status-strip">
+        <div class="status-tile">
+          <b>Swallow risk ล่าสุด</b>
+          <span id="sideRisk">ยังไม่มีข้อมูล</span>
+        </div>
+        <div class="status-tile">
+          <b>Improvement จาก baseline</b>
+          <span id="sideImprove">-</span>
+        </div>
+        <div class="status-tile">
+          <b>ฝึกวันนี้</b>
+          <span id="sideToday">0 รายการ</span>
+        </div>
+      </div>
+
+      <nav class="nav" aria-label="App sections">
+        <button class="active" data-tab="swallow"><span class="nav-icon">SW</span><span>ประเมินการกลืน</span></button>
+        <button data-tab="speech"><span class="nav-icon">SP</span><span>ฝึกพูด</span></button>
+        <button data-tab="face"><span class="nav-icon">FA</span><span>ฝึกหน้า/ปาก</span></button>
+        <button data-tab="trend"><span class="nav-icon">TR</span><span>แนวโน้ม</span></button>
+        <button data-tab="settings"><span class="nav-icon">SE</span><span>ตั้งค่า/ข้อมูล</span></button>
+      </nav>
+
+      <div class="sidebar-note">
+        แอปนี้เป็น prototype สำหรับ screening และติดตามความก้าวหน้า ไม่ใช่เครื่องมือวินิจฉัยโรคหรือทดแทนแพทย์/นักแก้ไขการพูด
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <div class="page-title">
+          <h1>ประเมินการกลืนและฝึกฟื้นฟูหลัง Stroke</h1>
+          <p>ใช้ไมโครโฟนวัด acoustic pattern ของการกลืนน้ำ, รวมอาการร่วม, บันทึกแนวโน้ม และฝึกเสียงพูด/กล้ามเนื้อปากสำหรับผู้มีปากเบี้ยวหรืออ่อนแรงครึ่งซีก</p>
+        </div>
+        <div class="top-actions">
+          <button class="btn ghost" id="quickSaveBtn">บันทึก snapshot</button>
+          <button class="btn primary" data-tab-jump="trend">ดูกราฟ</button>
+        </div>
+      </div>
+
+      <div class="alert" role="note">
+        <div class="mark">!</div>
+        <div>
+          <strong>ข้อควรระวังทางการแพทย์</strong>
+          ถ้ามีสำลักบ่อย เสียงเปียกหลังกลืน หายใจลำบาก ไข้ ปอดอักเสบ น้ำหนักลด หรือแพทย์สั่งงดน้ำ/อาหาร ห้ามใช้การทดสอบดื่มน้ำเอง ให้ติดต่อแพทย์หรือ SLP ทันที ถ้ามีหน้าเบี้ยวเฉียบพลัน แขนอ่อนแรง พูดไม่ชัดทันที ให้โทรฉุกเฉิน
+        </div>
+      </div>
+
+      <section class="section active" id="tab-swallow">
+        <div class="band">
+          <div class="band-title">
+            <div>
+              <h2>โปรไฟล์และ Safety Gate</h2>
+              <p>กรอกข้อมูลก่อนบันทึกเสียง เพื่อให้คะแนนความเสี่ยงไม่พึ่งเสียงอย่างเดียว</p>
+            </div>
+            <span class="pill blue" id="profileModePill">โหมดคัดกรอง</span>
+          </div>
+
+          <div class="form-grid">
+            <div class="field">
+              <label for="patientName">ชื่อ/รหัสผู้ใช้</label>
+              <input id="patientName" placeholder="เช่น คุณแม่ หรือ P001">
+            </div>
+            <div class="field">
+              <label for="patientAge">อายุ</label>
+              <input id="patientAge" type="number" min="1" max="120" placeholder="65">
+            </div>
+            <div class="field">
+              <label for="patientMode">สถานะ</label>
+              <select id="patientMode">
+                <option value="screen">ยังไม่ทราบ/คัดกรองทั่วไป</option>
+                <option value="known-stroke">ทราบว่าเป็น Stroke แล้ว</option>
+                <option value="normal">สุขภาพดี ใช้เป็น baseline normal</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="weakSide">อ่อนแรง/ปากเบี้ยวด้าน</label>
+              <select id="weakSide">
+                <option value="none">ไม่มี/ไม่ระบุ</option>
+                <option value="left">ซ้าย</option>
+                <option value="right">ขวา</option>
+                <option value="both">สองข้าง</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="dietLevel">ระดับอาหาร/น้ำที่แพทย์อนุญาต</label>
+              <select id="dietLevel">
+                <option value="normal">น้ำ/อาหารปกติ</option>
+                <option value="soft">อาหารอ่อน</option>
+                <option value="thick">น้ำข้น/อาหารปรับเนื้อ</option>
+                <option value="npo">งดน้ำ/อาหารทางปาก</option>
+                <option value="unknown">ไม่ทราบ</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="sipVolume">ปริมาณน้ำทดสอบ</label>
+              <select id="sipVolume">
+                <option value="3">3 ml</option>
+                <option value="5" selected>5 ml</option>
+                <option value="10">10 ml</option>
+                <option value="free">จิบเล็กตามปลอดภัย</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="lastMeal">หลังอาหาร/ยา</label>
+              <select id="lastMeal">
+                <option value="baseline">ยังไม่ได้กินใน 30 นาที</option>
+                <option value="after-meal">หลังอาหาร</option>
+                <option value="after-meds">หลังยา</option>
+                <option value="fatigue">วันนี้เหนื่อย/ง่วง</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="sessionNote">หมายเหตุ</label>
+              <input id="sessionNote" placeholder="เช่น วันที่ 5 rehab, ฝึกกับนักบำบัดแล้ว">
+            </div>
+          </div>
+
+          <div class="grid-2" style="margin-top:16px">
+            <div>
+              <div class="check-title">อาการระหว่าง/หลังกลืน</div>
+              <div class="checks" id="symptomChecks">
+                <label class="check"><input type="checkbox" value="cough"> ไอหรือสำลัก</label>
+                <label class="check"><input type="checkbox" value="wetVoice"> เสียงเปียก/เสียงก้องหลังกลืน</label>
+                <label class="check"><input type="checkbox" value="throatClear"> กระแอมซ้ำ</label>
+                <label class="check"><input type="checkbox" value="residue"> รู้สึกค้างในคอ</label>
+                <label class="check"><input type="checkbox" value="drool"> น้ำลายไหล/ปิดปากไม่สนิท</label>
+                <label class="check"><input type="checkbox" value="nasal"> น้ำ/อาหารขึ้นจมูก</label>
+              </div>
+            </div>
+            <div>
+              <div class="check-title">Red flags</div>
+              <div class="checks" id="redFlagChecks">
+                <label class="check"><input type="checkbox" value="breath"> หายใจลำบาก/เขียว</label>
+                <label class="check"><input type="checkbox" value="fever"> ไข้หรือสงสัยปอดอักเสบ</label>
+                <label class="check"><input type="checkbox" value="weight"> น้ำหนักลด/ขาดน้ำ</label>
+                <label class="check"><input type="checkbox" value="acuteStroke"> หน้าเบี้ยว/แขนอ่อนแรง/พูดไม่ชัดเฉียบพลัน</label>
+              </div>
+            </div>
+          </div>
+
+          <div id="safetyBox" class="safety-box watch" style="margin-top:16px">
+            <strong>รอข้อมูลความปลอดภัย</strong>
+            <span>กรอกข้อมูลและตรวจ red flags ก่อนเริ่มบันทึกเสียงการกลืน</span>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="band">
+            <div class="band-title">
+              <div>
+                <h2>Mic Swallow Test</h2>
+                <p>วางไมค์ใกล้คอด้านหน้า/ข้างคอในตำแหน่งที่เสียงชัด แล้วบันทึกช่วงก่อนกลืน กลืน และหลังกลืน</p>
+              </div>
+              <span class="pill" id="micStatePill">ไมค์ยังไม่เริ่ม</span>
+            </div>
+
+            <div class="button-row">
+              <button class="btn primary" id="startSwallowBtn">เริ่มบันทึก 8 วินาที</button>
+              <button class="btn red" id="stopSwallowBtn" disabled>หยุด</button>
+              <button class="btn teal" id="analyzeSwallowBtn" disabled>วิเคราะห์</button>
+              <button class="btn green" id="saveSwallowBtn" disabled>บันทึกผล</button>
+            </div>
+
+            <div class="pill-row" style="margin:13px 0">
+              <span class="pill">ขั้น 1: หายใจปกติ 2 วิ</span>
+              <span class="pill">ขั้น 2: จิบน้ำเล็ก</span>
+              <span class="pill">ขั้น 3: กลืน 1 ครั้ง</span>
+              <span class="pill">ขั้น 4: ฟังเสียงหลังกลืน</span>
+            </div>
+
+            <div class="canvas-wrap">
+              <canvas id="waveCanvas" width="900" height="240" aria-label="waveform"></canvas>
+              <canvas id="spectrogramCanvas" width="900" height="150" aria-label="spectrogram"></canvas>
+            </div>
+
+            <p class="small muted" id="audioDebug">ระบบจะคำนวณ RMS, zero-crossing, spectral centroid, burst หลังกลืน, duration และจำนวน swallow-like events</p>
+          </div>
+
+          <div class="band">
+            <div class="band-title">
+              <div>
+                <h2>ผลประเมินล่าสุด</h2>
+                <p>คะแนนเป็น heuristic สำหรับติดตามแนวโน้ม ไม่ใช่ diagnosis ทางการแพทย์</p>
+              </div>
+              <span class="pill amber" id="resultStatusPill">ยังไม่มีผล</span>
+            </div>
+
+            <div class="result-panel">
+              <div class="result-head">
+                <div>
+                  <div class="risk-label" id="riskLabel">รอบันทึกเสียง</div>
+                  <div class="muted" id="riskText">เมื่อวิเคราะห์เสร็จ แอปจะแสดงระดับ normal-like / monitor / high concern พร้อมคำแนะนำ</div>
+                </div>
+                <div class="large-score" id="riskScore">--</div>
+              </div>
+
+              <div class="meter-wrap">
+                <div class="meter"><div class="meter-needle" id="riskNeedle"></div></div>
+                <div class="pill-row">
+                  <span class="pill green">0-24 normal-like</span>
+                  <span class="pill amber">25-49 monitor</span>
+                  <span class="pill amber">50-74 high concern</span>
+                  <span class="pill red">75+ stop / refer</span>
+                </div>
+              </div>
+
+              <table class="feature-table" aria-label="swallow features">
+                <tbody id="featureRows">
+                  <tr><th>Feature</th><th>Value</th><th>Meaning</th></tr>
+                  <tr><td colspan="3" class="muted">ยังไม่มีข้อมูล</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="band">
+          <div class="band-title">
+            <div>
+              <h2>แผน Rehab การกลืนประจำวัน</h2>
+              <p>เลือกเฉพาะท่าที่แพทย์/SLP อนุญาต เป้าหมายคือทำบ่อยพอและดู trend ดีขึ้นอย่างค่อยเป็นค่อยไป</p>
+            </div>
+            <div class="timer" id="exerciseTimer">00:00</div>
+          </div>
+
+          <div class="exercise-list" id="swallowExerciseList"></div>
+        </div>
+      </section>
+
+      <section class="section" id="tab-speech">
+        <div class="band">
+          <div class="band-title">
+            <div>
+              <h2>ฝึกพูด ไทย/อังกฤษ</h2>
+              <p>ใช้ TTS เป็นตัวอย่างเสียง ใช้ Speech Recognition ถ้าบราวเซอร์รองรับ และบันทึกคะแนน articulation/voice stability</p>
+            </div>
+            <div class="segmented" role="tablist" aria-label="language">
+              <button class="active" data-lang="th-TH">ไทย</button>
+              <button data-lang="en-US">English</button>
+            </div>
+          </div>
+
+          <div class="grid-3">
+            <div class="field">
+              <label for="voiceSelect">เสียงตัวอย่าง</label>
+              <select id="voiceSelect"></select>
+            </div>
+            <div class="field">
+              <label for="speechCategory">หมวดฝึก</label>
+              <select id="speechCategory">
+                <option value="warmup">วอร์มเสียง/ปาก</option>
+                <option value="bilabial">ริมฝีปาก ป/บ/ม</option>
+                <option value="tongue">ลิ้น ต/ด/ล/ร</option>
+                <option value="sentences">ประโยคใช้งานจริง</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="speechNote">บันทึกอาการพูด</label>
+              <input id="speechNote" placeholder="เช่น พูดชัดขึ้นช่วงเช้า เหนื่อยตอนเย็น">
+            </div>
+          </div>
+        </div>
+
+        <div class="phrase-grid" id="phraseGrid"></div>
+
+        <div class="grid-2">
+          <div class="band">
+            <div class="band-title">
+              <div>
+                <h3>Sustained Vowel Test</h3>
+                <p>ออกเสียง อา หรือ /a/ ให้นิ่ง 5-8 วินาที แอปจะวัด duration, loudness stability และ pitch proxy</p>
+              </div>
+              <span class="pill" id="voiceStatePill">พร้อม</span>
+            </div>
+            <div class="button-row">
+              <button class="btn primary" id="startVoiceBtn">เริ่มวัดเสียงสระ</button>
+              <button class="btn red" id="stopVoiceBtn" disabled>หยุด</button>
+              <button class="btn green" id="saveVoiceBtn" disabled>บันทึก voice score</button>
+            </div>
+            <div class="metric-grid" style="margin-top:14px">
+              <div class="metric"><span>Duration</span><b id="voiceDuration">--</b></div>
+              <div class="metric"><span>Loudness stability</span><b id="voiceStability">--</b></div>
+              <div class="metric"><span>Pitch stability</span><b id="pitchStability">--</b></div>
+              <div class="metric"><span>Voice score</span><b id="voiceScore">--</b></div>
+            </div>
+          </div>
+
+          <div class="band">
+            <div class="band-title">
+              <div>
+                <h3>DDK 10 วินาที</h3>
+                <p>พูด ปา-ตา-กา หรือ pa-ta-ka ต่อเนื่อง วัดจำนวน burst เพื่อดู motor speech coordination</p>
+              </div>
+              <span class="pill" id="ddkStatePill">พร้อม</span>
+            </div>
+            <div class="button-row">
+              <button class="btn primary" id="startDdkBtn">เริ่ม DDK</button>
+              <button class="btn ghost" id="manualTapBtn">นับเอง +1</button>
+              <button class="btn green" id="saveDdkBtn" disabled>บันทึก DDK</button>
+            </div>
+            <div class="metric-grid" style="margin-top:14px">
+              <div class="metric"><span>Auto peaks</span><b id="ddkPeaks">0</b></div>
+              <div class="metric"><span>Manual taps</span><b id="manualTaps">0</b></div>
+              <div class="metric"><span>Rate</span><b id="ddkRate">--</b></div>
+              <div class="metric"><span>Coordination</span><b id="ddkScore">--</b></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="tab-face">
+        <div class="grid-2">
+          <div class="band">
+            <div class="band-title">
+              <div>
+                <h2>Mirror Mode สำหรับปากเบี้ยว/ครึ่งซีก</h2>
+                <p>เปิดกล้องเพื่อดูแนวกึ่งกลางหน้า ฝึกยิ้ม เม้มปาก เป่าลม และออกเสียงพร้อม feedback จากตัวเอง</p>
+              </div>
+              <span class="pill" id="cameraStatePill">กล้องปิด</span>
+            </div>
+
+            <div class="camera-box">
+              <video id="mirrorVideo" autoplay playsinline muted></video>
+              <div class="camera-grid"></div>
+              <div class="camera-help">จัดจมูก/ริมฝีปากให้อยู่ใกล้เส้นกลาง แล้วสังเกตมุมปากซ้าย-ขวาขณะยิ้มและออกเสียง ปา-มะ-อู</div>
+            </div>
+
+            <div class="button-row" style="margin-top:12px">
+              <button class="btn primary" id="startCameraBtn">เปิดกล้อง</button>
+              <button class="btn red" id="stopCameraBtn" disabled>ปิดกล้อง</button>
+              <button class="btn green" id="saveFaceBtn">บันทึก face score</button>
+            </div>
+          </div>
+
+          <div class="band">
+            <div class="band-title">
+              <div>
+                <h2>แบบประเมินกล้ามเนื้อปาก</h2>
+                <p>ให้คะแนน 0-5 โดย 5 คือทำได้สมมาตรและคุมได้ดี ใช้ดูแนวโน้มรายวัน</p>
+              </div>
+            </div>
+
+            <div id="faceRatings"></div>
+            <div class="field" style="margin-top:14px">
+              <label for="faceNote">บันทึกเพิ่มเติม</label>
+              <textarea id="faceNote" placeholder="เช่น น้ำลายลดลง ยิ้มซ้ายเริ่มดีขึ้น ยังรั่วตอนดูดน้ำ"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="band">
+          <div class="band-title">
+            <div>
+              <h2>ชุดฝึกปากและเสียง</h2>
+              <p>เน้น lip seal, cheek control, tongue range และเสียงพยัญชนะสองริมฝีปากสำหรับผู้ปากเบี้ยว</p>
+            </div>
+          </div>
+          <div class="exercise-list" id="faceExerciseList"></div>
+        </div>
+      </section>
+
+      <section class="section" id="tab-trend">
+        <div class="metric-grid">
+          <div class="metric"><span>จำนวน swallow sessions</span><b id="totalSwallowSessions">0</b></div>
+          <div class="metric"><span>Risk เฉลี่ย 7 ครั้งล่าสุด</span><b id="avgRisk">--</b></div>
+          <div class="metric"><span>Improvement</span><b id="trendImprove">--</b></div>
+          <div class="metric"><span>Speech/Face logs</span><b id="totalRehabLogs">0</b></div>
+        </div>
+
+        <div class="grid-2">
+          <div class="band">
+            <div class="band-title">
+              <div>
+                <h2>Swallow Risk Trend</h2>
+                <p>คะแนนลดลงคือแนวโน้มดีขึ้น เมื่อวัดด้วยวิธีใกล้เคียงกันทุกครั้ง</p>
+              </div>
+            </div>
+            <canvas id="trendCanvas" width="900" height="320"></canvas>
+          </div>
+
+          <div class="band">
+            <div class="band-title">
+              <div>
+                <h2>Speech / Voice / Face Trend</h2>
+                <p>คะแนนสูงขึ้นคือควบคุมเสียงและกล้ามเนื้อดีขึ้น</p>
+              </div>
+            </div>
+            <canvas id="speechTrendCanvas" width="900" height="320"></canvas>
+          </div>
+        </div>
+
+        <div class="band">
+          <div class="band-title">
+            <div>
+              <h2>ประวัติทั้งหมด</h2>
+              <p>ข้อมูลเก็บใน localStorage ของ browser นี้เท่านั้น</p>
+            </div>
+            <div class="button-row">
+              <button class="btn ghost" id="exportCsvBtn">Export CSV</button>
+              <button class="btn ghost" id="exportJsonBtn">Export JSON</button>
+            </div>
+          </div>
+          <div id="historyTableWrap"></div>
+        </div>
+      </section>
+
+      <section class="section" id="tab-settings">
+        <div class="grid-2">
+          <div class="band">
+            <div class="band-title">
+              <div>
+                <h2>Privacy และ Data</h2>
+                <p>เสียงดิบไม่ได้อัปโหลดออกนอกเครื่อง แอปบันทึกเฉพาะ feature/score และ notes ที่คุณกรอก</p>
+              </div>
+            </div>
+
+            <div class="button-row">
+              <button class="btn ghost" id="downloadJsonBtn">ดาวน์โหลด backup JSON</button>
+              <label class="btn ghost" for="importJsonInput">นำเข้า JSON</label>
+              <input id="importJsonInput" type="file" accept="application/json" class="hidden">
+              <button class="btn red" id="clearDataBtn">ล้างข้อมูลทั้งหมด</button>
+            </div>
+
+            <div class="field" style="margin-top:16px">
+              <label for="clinicianPlan">แผนจากแพทย์/SLP</label>
+              <textarea id="clinicianPlan" placeholder="เช่น อนุญาตน้ำข้น IDDSI level..., ฝึก effortful swallow 10 ครั้ง x 3 รอบ, หลีกเลี่ยงน้ำใส"></textarea>
+            </div>
+          </div>
+
+          <div class="band">
+            <div class="band-title">
+              <div>
+                <h2>แนวคิดจากเอกสารที่แนบ</h2>
+                <p>สรุปเป็นหลักออกแบบของ prototype นี้</p>
+              </div>
+            </div>
+            <div class="exercise-list">
+              <div class="exercise">
+                <div>
+                  <h4>Acoustic cervical auscultation</h4>
+                  <p>ใช้ feature จากเสียง/แรงสั่นสะเทือนบริเวณคอ เช่น duration, burst, spectral energy เพื่อช่วยติดตาม swallowing event โดยเฉพาะหลัง stroke</p>
+                </div>
+                <span class="pill blue">HRCA</span>
+              </div>
+              <div class="exercise">
+                <div>
+                  <h4>Daily non-invasive monitoring</h4>
+                  <p>งานวิจัย dysphagia หลายชิ้นมองว่า VFSS เป็นมาตรฐานวินิจฉัย แต่ sensor ที่บ้านเหมาะกับ screening และ trend ระยะยาว</p>
+                </div>
+                <span class="pill green">Trend</span>
+              </div>
+              <div class="exercise">
+                <div>
+                  <h4>Rehab ต้องเน้นความปลอดภัย</h4>
+                  <p>การจิบน้ำเพื่อทดสอบควรทำเฉพาะเมื่อปลอดภัย ไม่มี red flags และไม่ขัดกับแผนของแพทย์/SLP</p>
+                </div>
+                <span class="pill red">Safety</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const STORAGE_KEY = "strokeSwallowSpeechRehab.v1";
+
+    const defaultState = {
+      profile: {
+        patientName: "",
+        patientAge: "",
+        patientMode: "screen",
+        weakSide: "none",
+        dietLevel: "normal",
+        sipVolume: "5",
+        lastMeal: "baseline",
+        sessionNote: "",
+        clinicianPlan: ""
+      },
+      sessions: [],
+      speechLogs: [],
+      faceLogs: [],
+      exerciseLogs: []
+    };
+
+    let app = loadState();
+    let swallowRecorder = null;
+    let voiceRecorder = null;
+    let ddkRecorder = null;
+    let currentSwallowResult = null;
+    let currentVoiceResult = null;
+    let currentDdkResult = null;
+    let cameraStream = null;
+    let currentLang = "th-TH";
+    let recognition = null;
+    let activeTimer = null;
+    let timerDeadline = 0;
+    let manualDdkTaps = 0;
+
+    const phraseBank = {
+      "th-TH": {
+        warmup: [
+          ["อา อี อู", "เปิดเสียงยาวและปิดริมฝีปากสลับกัน"],
+          ["มะ มะ มะ", "ริมฝีปากปิดสนิทก่อนปล่อยเสียง"],
+          ["ปา ตา กา", "ฝึกจังหวะริมฝีปาก ลิ้นหน้า ลิ้นหลัง"],
+          ["อู อี อา", "ฝึกมุมปากและรูปปาก"]
+        ],
+        bilabial: [
+          ["ปา ปา ปา", "เสียง ป ต้องมีแรงลมสั้นและชัด"],
+          ["มา มา มา", "ปิดริมฝีปากให้สนิทก่อนออกเสียง"],
+          ["ปู ปลา ไป ปากน้ำ", "ฝึกเสียง ป ในคำหลายตำแหน่ง"],
+          ["แม่มีมะม่วง", "ฝึก ม และการคุมลมหายใจ"]
+        ],
+        tongue: [
+          ["ตา ดา ลา", "แตะปลายลิ้นหลังฟันบน"],
+          ["ลา ลี ลู เล โล", "ฝึก range ของลิ้นและเสียงสระ"],
+          ["รถแล่นเร็ว", "ฝึก ร/ล อย่างช้าและชัด"],
+          ["ตากล้าเดินตรง", "ฝึกคำต่อเนื่อง"]
+        ],
+        sentences: [
+          ["วันนี้ฉันกลืนน้ำได้ดีขึ้น", "พูดช้า ชัด เว้นวรรค"],
+          ["ขอน้ำหนึ่งแก้วครับ", "ประโยคใช้จริงในบ้าน"],
+          ["ฉันอยากพักสักครู่", "ฝึกสื่อสารอาการเหนื่อย"],
+          ["ช่วยโทรหาคุณหมอให้หน่อย", "ประโยคความปลอดภัย"]
+        ]
+      },
+      "en-US": {
+        warmup: [
+          ["ah ee oo", "Shape the mouth slowly"],
+          ["ma ma ma", "Close both lips before voice"],
+          ["pa ta ka", "Coordinate lips, tongue tip, and tongue back"],
+          ["oo ee ah", "Train lip rounding and smile spread"]
+        ],
+        bilabial: [
+          ["pa pa pa", "Short clear air release"],
+          ["ma ma ma", "Firm lip seal"],
+          ["buy my blue bag", "Bilabial sounds in a phrase"],
+          ["mom made lemon tea", "Smooth connected speech"]
+        ],
+        tongue: [
+          ["ta da la", "Lift the tongue tip"],
+          ["la lee loo lay low", "Tongue range and vowels"],
+          ["red lorry yellow lorry", "Slow contrast practice"],
+          ["today I feel stronger", "Functional sentence"]
+        ],
+        sentences: [
+          ["I can swallow safely today", "Slow, clear, steady"],
+          ["Please give me a small sip of water", "Home communication"],
+          ["I need to rest for a moment", "Fatigue communication"],
+          ["Please call my doctor", "Safety sentence"]
+        ]
+      }
+    };
+
+    const swallowExercises = [
+      {
+        id: "effortful",
+        title: "Effortful swallow",
+        desc: "กลืนแรงเหมือนบีบคอเบาๆ 5-10 ครั้ง เฉพาะเมื่อ SLP อนุญาต",
+        seconds: 60,
+        tag: "กลืน"
+      },
+      {
+        id: "tonguePress",
+        title: "Tongue press",
+        desc: "ดันลิ้นขึ้นเพดานปาก ค้าง 3 วินาที ทำ 10 ครั้ง",
+        seconds: 45,
+        tag: "ลิ้น"
+      },
+      {
+        id: "ctar",
+        title: "CTAR / Chin tuck against resistance",
+        desc: "กดคางกับลูกบอลนิ่มหรือผ้าขนหนู ค้างตามแผน rehab",
+        seconds: 60,
+        tag: "คอ"
+      },
+      {
+        id: "lipSeal",
+        title: "Lip seal with sip safety",
+        desc: "เม้มปากเบาๆ สลับยิ้ม เพื่อช่วยลดน้ำลายไหลและน้ำรั่วมุมปาก",
+        seconds: 45,
+        tag: "ปาก"
+      },
+      {
+        id: "posture",
+        title: "Posture check",
+        desc: "นั่งหลังตรง คางกลางลำตัว ไหล่ผ่อนคลาย ก่อนทานอาหารหรือทดสอบ",
+        seconds: 30,
+        tag: "ท่าทาง"
+      }
+    ];
+
+    const faceExercises = [
+      {
+        id: "smileHold",
+        title: "Smile hold",
+        desc: "ยิ้มให้มุมปากสองข้างเท่ากัน ค้าง 5 วินาที ทำ 10 ครั้ง",
+        seconds: 60,
+        tag: "ยิ้ม"
+      },
+      {
+        id: "puckerSmile",
+        title: "Pucker to smile",
+        desc: "ทำปากจู๋ อู แล้วเปลี่ยนเป็นยิ้ม อี ช้าๆ",
+        seconds: 45,
+        tag: "รูปปาก"
+      },
+      {
+        id: "cheekPuff",
+        title: "Cheek puff",
+        desc: "อมลมในแก้ม รักษา lip seal ไม่ให้ลมรั่ว",
+        seconds: 45,
+        tag: "แก้ม"
+      },
+      {
+        id: "strawControl",
+        title: "Straw/lip control dry practice",
+        desc: "ฝึกปิดริมฝีปากรอบหลอดแบบแห้ง ยังไม่ต้องดูดน้ำถ้ายังไม่ปลอดภัย",
+        seconds: 40,
+        tag: "lip seal"
+      },
+      {
+        id: "tongueSweep",
+        title: "Tongue lateral sweep",
+        desc: "แตะลิ้นซ้าย-ขวาด้านในแก้ม ช่วยรับรู้เศษอาหารค้าง",
+        seconds: 50,
+        tag: "ลิ้น"
+      }
+    ];
+
+    const faceRatingItems = [
+      ["smile", "ยิ้มสมมาตร"],
+      ["lipClose", "ปิดริมฝีปากสนิท"],
+      ["cheek", "อมลมในแก้มไม่รั่ว"],
+      ["tongueLeft", "แตะลิ้นไปด้านซ้าย"],
+      ["tongueRight", "แตะลิ้นไปด้านขวา"],
+      ["speechClarity", "พูดชัดขณะมองกระจก"]
+    ];
+
+    function $(id) {
+      return document.getElementById(id);
+    }
+
+    function $all(selector, root = document) {
+      return Array.from(root.querySelectorAll(selector));
+    }
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return structuredClone(defaultState);
+        const parsed = JSON.parse(raw);
+        return {
+          ...structuredClone(defaultState),
+          ...parsed,
+          profile: { ...defaultState.profile, ...(parsed.profile || {}) },
+          sessions: parsed.sessions || [],
+          speechLogs: parsed.speechLogs || [],
+          faceLogs: parsed.faceLogs || [],
+          exerciseLogs: parsed.exerciseLogs || []
+        };
+      } catch (error) {
+        console.warn(error);
+        return structuredClone(defaultState);
+      }
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(app));
+      refreshDashboard();
+    }
+
+    function toast(message) {
+      const el = $("toast");
+      el.textContent = message;
+      el.classList.add("show");
+      clearTimeout(toast._timer);
+      toast._timer = setTimeout(() => el.classList.remove("show"), 2700);
+    }
+
+    function nowIso() {
+      return new Date().toISOString();
+    }
+
+    function formatDate(iso) {
+      return new Intl.DateTimeFormat("th-TH", {
+        dateStyle: "medium",
+        timeStyle: "short"
+      }).format(new Date(iso));
+    }
+
+    function clamp(value, min, max) {
+      return Math.min(max, Math.max(min, value));
+    }
+
+    function mean(values) {
+      if (!values.length) return 0;
+      return values.reduce((a, b) => a + b, 0) / values.length;
+    }
+
+    function median(values) {
+      if (!values.length) return 0;
+      const sorted = [...values].sort((a, b) => a - b);
+      const mid = Math.floor(sorted.length / 2);
+      return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
+    }
+
+    function std(values) {
+      if (values.length < 2) return 0;
+      const m = mean(values);
+      return Math.sqrt(mean(values.map(v => (v - m) ** 2)));
+    }
+
+    function percentile(values, p) {
+      if (!values.length) return 0;
+      const sorted = [...values].sort((a, b) => a - b);
+      const i = clamp(Math.round((p / 100) * (sorted.length - 1)), 0, sorted.length - 1);
+      return sorted[i];
+    }
+
+    function getCheckedValues(containerId) {
+      return $all(`#${containerId} input[type="checkbox"]:checked`).map(input => input.value);
+    }
+
+    function bindProfile() {
+      Object.keys(app.profile).forEach(key => {
+        const el = $(key);
+        if (!el) return;
+        el.value = app.profile[key] ?? "";
+        el.addEventListener("input", () => {
+          app.profile[key] = el.value;
+          saveState();
+          updateSafetyBox();
+        });
+      });
+      $("clinicianPlan").value = app.profile.clinicianPlan || "";
+      $("clinicianPlan").addEventListener("input", event => {
+        app.profile.clinicianPlan = event.target.value;
+        saveState();
+      });
+      $all("#symptomChecks input, #redFlagChecks input").forEach(input => {
+        input.addEventListener("change", updateSafetyBox);
+      });
+      updateSafetyBox();
+    }
+
+    function updateSafetyBox() {
+      const box = $("safetyBox");
+      const redFlags = getCheckedValues("redFlagChecks");
+      const symptoms = getCheckedValues("symptomChecks");
+      const profile = app.profile;
+      $("profileModePill").textContent =
+        profile.patientMode === "known-stroke" ? "Known Stroke Rehab" :
+        profile.patientMode === "normal" ? "Normal baseline" : "โหมดคัดกรอง";
+
+      box.classList.remove("safe", "watch", "stop");
+      if (redFlags.length || profile.dietLevel === "npo") {
+        box.classList.add("stop");
+        box.innerHTML = `
+          <strong>หยุดทดสอบดื่มน้ำเอง</strong>
+          <span>พบ red flag หรือสถานะงดน้ำ/อาหารทางปาก ให้ใช้แอปเฉพาะบันทึกอาการและฝึกเสียง/หน้าแบบไม่กินน้ำ แล้วติดต่อแพทย์หรือ SLP</span>
+        `;
+        $("startSwallowBtn").disabled = true;
+        return;
+      }
+
+      if (profile.dietLevel === "thick" || profile.dietLevel === "unknown" || symptoms.length >= 2 || profile.patientMode === "known-stroke") {
+        box.classList.add("watch");
+        box.innerHTML = `
+          <strong>ใช้แบบระวังสูง</strong>
+          <span>เริ่มจากปริมาณน้อยมาก ทำขณะมีผู้ดูแล และหยุดทันทีถ้าไอ เสียงเปียก หายใจผิดปกติ หรือเหนื่อย</span>
+        `;
+        $("startSwallowBtn").disabled = false;
+        return;
+      }
+
+      box.classList.add("safe");
+      box.innerHTML = `
+        <strong>พร้อมคัดกรองแบบ low-risk</strong>
+        <span>ยังควรใช้ปริมาณน้ำน้อย วัดในท่านั่ง และบันทึกอาการร่วมทุกครั้งเพื่อดูแนวโน้ม</span>
+      `;
+      $("startSwallowBtn").disabled = false;
+    }
+
+    function bindNavigation() {
+      $all(".nav button, [data-tab-jump]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const tab = btn.dataset.tab || btn.dataset.tabJump;
+          if (tab) showTab(tab);
+        });
+      });
+    }
+
+    function showTab(tab) {
+      $all(".nav button").forEach(btn => btn.classList.toggle("active", btn.dataset.tab === tab));
+      $all(".section").forEach(section => section.classList.toggle("active", section.id === `tab-${tab}`));
+      if (tab === "trend") {
+        refreshDashboard();
+      }
+    }
+
+    function createAudioFeatureRecorder({ onFrame, onStop, maxSeconds = 8, mode = "swallow" }) {
+      let stream = null;
+      let context = null;
+      let analyser = null;
+      let source = null;
+      let raf = 0;
+      let startedAt = 0;
+      let stopped = false;
+      const frames = [];
+      const waveform = [];
+      const pitchValues = [];
+
+      async function start() {
+        stream = await navigator.mediaDevices.getUserMedia({
+          audio: {
+            echoCancellation: false,
+            noiseSuppression: false,
+            autoGainControl: false
+          }
+        });
+        context = new (window.AudioContext || window.webkitAudioContext)();
+        analyser = context.createAnalyser();
+        analyser.fftSize = mode === "voice" ? 4096 : 2048;
+        analyser.smoothingTimeConstant = 0.25;
+        source = context.createMediaStreamSource(stream);
+        source.connect(analyser);
+        startedAt = performance.now();
+        stopped = false;
+        tick();
+      }
+
+      function tick() {
+        if (stopped) return;
+        const sampleRate = context.sampleRate;
+        const timeData = new Float32Array(analyser.fftSize);
+        const freqData = new Float32Array(analyser.frequencyBinCount);
+        analyser.getFloatTimeDomainData(timeData);
+        analyser.getFloatFrequencyData(freqData);
+        const t = (performance.now() - startedAt) / 1000;
+        const features = extractFrameFeatures(timeData, freqData, sampleRate);
+        features.t = t;
+        frames.push(features);
+        if (mode !== "ddk") {
+          waveform.push(...downsampleForWaveform(timeData, 32));
+          if (waveform.length > 2400) waveform.splice(0, waveform.length - 2400);
+        }
+        if (mode === "voice") {
+          const pitch = autoCorrelatePitch(timeData, sampleRate);
+          if (pitch > 0) {
+            features.pitch = pitch;
+            pitchValues.push(pitch);
+          }
+        }
+        onFrame?.({ t, features, timeData, freqData, waveform, sampleRate });
+        if (t >= maxSeconds) {
+          stop();
+          return;
+        }
+        raf = requestAnimationFrame(tick);
+      }
+
+      async function stop() {
+        if (stopped) return;
+        stopped = true;
+        cancelAnimationFrame(raf);
+        stream?.getTracks().forEach(track => track.stop());
+        if (context && context.state !== "closed") {
+          await context.close();
+        }
+        onStop?.({ frames, waveform, pitchValues });
+      }
+
+      return { start, stop, frames, waveform, pitchValues };
+    }
+
+    function extractFrameFeatures(timeData, freqData, sampleRate) {
+      let sumSquares = 0;
+      let crossings = 0;
+      let prev = timeData[0] || 0;
+      let peak = 0;
+      for (let i = 0; i < timeData.length; i++) {
+        const v = timeData[i];
+        sumSquares += v * v;
+        peak = Math.max(peak, Math.abs(v));
+        if ((prev < 0 && v >= 0) || (prev >= 0 && v < 0)) crossings++;
+        prev = v;
+      }
+      const rms = Math.sqrt(sumSquares / timeData.length);
+      const zcr = crossings / timeData.length;
+      let magSum = 0;
+      let weighted = 0;
+      let low = 0;
+      let mid = 0;
+      let high = 0;
+      for (let i = 0; i < freqData.length; i++) {
+        const hz = i * sampleRate / (2 * freqData.length);
+        const mag = Math.pow(10, freqData[i] / 20);
+        magSum += mag;
+        weighted += mag * hz;
+        if (hz >= 80 && hz < 300) low += mag;
+        if (hz >= 300 && hz < 2200) mid += mag;
+        if (hz >= 2200 && hz < 6000) high += mag;
+      }
+      return {
+        rms,
+        peak,
+        zcr,
+        centroid: magSum ? weighted / magSum : 0,
+        lowEnergy: low,
+        midEnergy: mid,
+        highEnergy: high,
+        highRatio: high / Math.max(low + mid + high, 1e-9)
+      };
+    }
+
+    function downsampleForWaveform(samples, step) {
+      const out = [];
+      for (let i = 0; i < samples.length; i += step) out.push(samples[i]);
+      return out;
+    }
+
+    function autoCorrelatePitch(buffer, sampleRate) {
+      const size = buffer.length;
+      const rms = Math.sqrt(buffer.reduce((sum, v) => sum + v * v, 0) / size);
+      if (rms < 0.015) return -1;
+      let bestOffset = -1;
+      let bestCorrelation = 0;
+      const minOffset = Math.floor(sampleRate / 400);
+      const maxOffset = Math.floor(sampleRate / 70);
+      for (let offset = minOffset; offset <= maxOffset; offset++) {
+        let correlation = 0;
+        for (let i = 0; i < size - offset; i++) {
+          correlation += buffer[i] * buffer[i + offset];
+        }
+        correlation /= size - offset;
+        if (correlation > bestCorrelation) {
+          bestCorrelation = correlation;
+          bestOffset = offset;
+        }
+      }
+      if (bestCorrelation < 0.002 || bestOffset <= 0) return -1;
+      return sampleRate / bestOffset;
+    }
+
+    function drawWaveform(canvas, waveform, color = "#67e8f9") {
+      const ctx = canvas.getContext("2d");
+      const width = canvas.width;
+      const height = canvas.height;
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = "#0f172a";
+      ctx.fillRect(0, 0, width, height);
+      ctx.strokeStyle = "rgba(255,255,255,0.13)";
+      ctx.lineWidth = 1;
+      for (let i = 1; i < 4; i++) {
+        const y = (height / 4) * i;
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(width, y);
+        ctx.stroke();
+      }
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      if (!waveform.length) {
+        ctx.moveTo(0, height / 2);
+        ctx.lineTo(width, height / 2);
+      } else {
+        waveform.forEach((v, i) => {
+          const x = i / Math.max(1, waveform.length - 1) * width;
+          const y = height / 2 - v * height * 0.44;
+          if (i === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        });
+      }
+      ctx.stroke();
+      ctx.fillStyle = "rgba(255,255,255,0.74)";
+      ctx.font = "14px sans-serif";
+      ctx.fillText("Waveform", 12, 22);
+    }
+
+    function drawSpectrogram(canvas, freqData) {
+      const ctx = canvas.getContext("2d");
+      const img = ctx.getImageData(1, 0, canvas.width - 1, canvas.height);
+      ctx.putImageData(img, 0, 0);
+      const bins = freqData.length;
+      for (let y = 0; y < canvas.height; y++) {
+        const bin = Math.floor((1 - y / canvas.height) * bins * 0.55);
+        const db = freqData[clamp(bin, 0, bins - 1)];
+        const normalized = clamp((db + 95) / 75, 0, 1);
+        const r = Math.floor(30 + normalized * 220);
+        const g = Math.floor(55 + normalized * 170);
+        const b = Math.floor(95 + normalized * 80);
+        ctx.fillStyle = `rgb(${r},${g},${b})`;
+        ctx.fillRect(canvas.width - 2, y, 2, 1);
+      }
+      ctx.fillStyle = "rgba(15,23,42,0.55)";
+      ctx.fillRect(0, 0, 128, 26);
+      ctx.fillStyle = "rgba(255,255,255,0.82)";
+      ctx.font = "14px sans-serif";
+      ctx.fillText("Spectrogram", 12, 18);
+    }
+
+    async function startSwallowRecording() {
+      if (!navigator.mediaDevices?.getUserMedia) {
+        toast("บราวเซอร์นี้ยังไม่รองรับ microphone API");
+        return;
+      }
+      currentSwallowResult = null;
+      $("saveSwallowBtn").disabled = true;
+      $("analyzeSwallowBtn").disabled = true;
+      $("startSwallowBtn").disabled = true;
+      $("stopSwallowBtn").disabled = false;
+      $("micStatePill").textContent = "กำลังบันทึก";
+      $("micStatePill").className = "pill red";
+      $("audioDebug").textContent = "กำลังรับเสียง: อยู่เงียบ 2 วินาทีแรก แล้วจิบน้ำเล็กและกลืน 1 ครั้ง";
+      clearCanvas($("spectrogramCanvas"), "#0f172a");
+
+      try {
+        swallowRecorder = createAudioFeatureRecorder({
+          maxSeconds: 8,
+          mode: "swallow",
+          onFrame: ({ t, freqData, waveform }) => {
+            drawWaveform($("waveCanvas"), waveform);
+            drawSpectrogram($("spectrogramCanvas"), freqData);
+            $("audioDebug").textContent = `กำลังบันทึก ${t.toFixed(1)}s | frame ${swallowRecorder.frames.length}`;
+          },
+          onStop: payload => {
+            $("startSwallowBtn").disabled = false;
+            $("stopSwallowBtn").disabled = true;
+            $("analyzeSwallowBtn").disabled = payload.frames.length < 8;
+            $("micStatePill").textContent = "บันทึกเสร็จ";
+            $("micStatePill").className = "pill green";
+            $("audioDebug").textContent = `ได้ข้อมูล ${payload.frames.length} frames กดวิเคราะห์เพื่อคำนวณ swallow features`;
+          }
+        });
+        await swallowRecorder.start();
+      } catch (error) {
+        console.error(error);
+        $("startSwallowBtn").disabled = false;
+        $("stopSwallowBtn").disabled = true;
+        $("micStatePill").textContent = "ไมค์เปิดไม่ได้";
+        $("micStatePill").className = "pill red";
+        toast("เปิดไมค์ไม่ได้: ตรวจ permission หรือเปิดผ่าน localhost/HTTPS");
+      }
+    }
+
+    function stopSwallowRecording() {
+      swallowRecorder?.stop();
+    }
+
+    function analyzeCurrentSwallow() {
+      if (!swallowRecorder?.frames?.length) return;
+      const manualSymptoms = getCheckedValues("symptomChecks");
+      const redFlags = getCheckedValues("redFlagChecks");
+      currentSwallowResult = analyzeSwallow(swallowRecorder.frames, manualSymptoms, redFlags, { ...app.profile });
+      renderSwallowResult(currentSwallowResult);
+      $("saveSwallowBtn").disabled = false;
+    }
+
+    function analyzeSwallow(frames, manualSymptoms, redFlags, profile) {
+      const rms = frames.map(f => f.rms);
+      const maxRms = Math.max(...rms);
+      const baselineFrames = frames.filter(f => f.t < 1.5);
+      const baseline = median((baselineFrames.length ? baselineFrames : frames.slice(0, 12)).map(f => f.rms));
+      const threshold = Math.max(baseline * 2.8, percentile(rms, 65) * 1.45, 0.018);
+      const segments = detectSegments(frames, f => f.rms > threshold, 0.14, 0.11)
+        .filter(seg => seg.duration > 0.08)
+        .map(seg => ({
+          ...seg,
+          peak: Math.max(...frames.slice(seg.startIndex, seg.endIndex + 1).map(f => f.rms)),
+          area: frames.slice(seg.startIndex, seg.endIndex + 1).reduce((sum, f) => sum + f.rms, 0)
+        }))
+        .sort((a, b) => b.area - a.area);
+      const main = segments[0] || null;
+      const swallowLike = segments.filter(seg => seg.duration > 0.16 && seg.peak > threshold * 1.05);
+      const postFrames = main ? frames.filter(f => f.t > main.end && f.t < main.end + 2.2) : [];
+      const preFrames = main ? frames.filter(f => f.t < Math.max(0.2, main.start - 0.2)) : frames.slice(0, 12);
+      const coughSegments = detectSegments(postFrames, f => {
+        return f.rms > threshold * 1.35 && f.centroid > 1500 && f.zcr > 0.08 && f.highRatio > 0.18;
+      }, 0.12, 0.08);
+      const residualNoise = mean(postFrames.map(f => f.rms));
+      const preNoise = mean(preFrames.map(f => f.rms));
+      const residualRatio = residualNoise / Math.max(preNoise, 1e-5);
+      const lowMidRatio = mean(frames.map(f => f.midEnergy / Math.max(f.lowEnergy + f.highEnergy, 1e-9)));
+      const duration = main ? main.duration : 0;
+      const latency = main ? main.start : 0;
+      const signalQuality = maxRms >= 0.022 && frames.length >= 30;
+      let score = 8;
+      const reasons = [];
+
+      if (!signalQuality) {
+        score += 24;
+        reasons.push("สัญญาณเบา/สั้น ทำให้ความมั่นใจต่ำ");
+      }
+      if (!main) {
+        score += 22;
+        reasons.push("ไม่พบ swallow burst ชัดเจน");
+      }
+      if (duration > 1.45) {
+        score += 15;
+        reasons.push("duration ยาวกว่าที่คาด อาจมีการกลืนช้าหรือหลายจังหวะ");
+      }
+      if (duration > 0 && duration < 0.18) {
+        score += 10;
+        reasons.push("event สั้นมาก อาจเป็นเสียงรบกวนหรือกลืนไม่เต็ม");
+      }
+      if (swallowLike.length > 1) {
+        const add = Math.min(20, (swallowLike.length - 1) * 8);
+        score += add;
+        reasons.push("พบ swallow-like events หลายครั้งในหนึ่งจิบ");
+      }
+      if (coughSegments.length) {
+        score += Math.min(26, coughSegments.length * 14);
+        reasons.push("พบ cough/throat-clear-like burst หลังกลืน");
+      }
+      if (residualRatio > 2.4) {
+        score += 12;
+        reasons.push("เสียงหลังกลืนสูงกว่าช่วงก่อนกลืนมาก");
+      }
+      if (latency > 3.2) {
+        score += 6;
+        reasons.push("latency ก่อนกลืนนาน อาจเกี่ยวกับ coordination/fatigue");
+      }
+      if (profile.patientMode === "known-stroke") {
+        score += 8;
+        reasons.push("มีประวัติ Stroke ใช้เป็น rehab monitor");
+      }
+      if (profile.dietLevel === "thick" || profile.dietLevel === "unknown") {
+        score += 8;
+        reasons.push("แผนอาหาร/น้ำต้องระวัง");
+      }
+      if (profile.dietLevel === "npo") {
+        score += 45;
+        reasons.push("สถานะงดน้ำ/อาหารทางปาก");
+      }
+
+      const symptomWeights = {
+        cough: 22,
+        wetVoice: 22,
+        throatClear: 12,
+        residue: 12,
+        drool: 10,
+        nasal: 14
+      };
+      manualSymptoms.forEach(symptom => {
+        score += symptomWeights[symptom] || 8;
+      });
+      if (manualSymptoms.length) reasons.push(`มีอาการร่วม: ${manualSymptoms.map(labelSymptom).join(", ")}`);
+      if (redFlags.length) {
+        score += 35;
+        reasons.push(`พบ red flags: ${redFlags.map(labelRedFlag).join(", ")}`);
+      }
+
+      score = Math.round(clamp(score, 0, 100));
+      const category = classifyRisk(score);
+      const confidence = signalQuality ? clamp(90 - Math.abs(frames.length - 240) * 0.08, 55, 92) : 42;
+      const recommendation = recommendationFor(category.key, profile);
+
+      return {
+        id: crypto.randomUUID?.() || String(Date.now()),
+        type: "swallow",
+        timestamp: nowIso(),
+        score,
+        category,
+        confidence: Math.round(confidence),
+        recommendation,
+        reasons,
+        manualSymptoms,
+        redFlags,
+        profile,
+        features: {
+          frames: frames.length,
+          baselineRms: baseline,
+          threshold,
+          maxRms,
+          eventCount: swallowLike.length,
+          mainDuration: duration,
+          latency,
+          coughBursts: coughSegments.length,
+          residualRatio,
+          spectralCentroid: mean(frames.map(f => f.centroid)),
+          highRatio: mean(frames.map(f => f.highRatio)),
+          lowMidRatio,
+          signalQuality
+        }
+      };
+    }
+
+    function detectSegments(frames, predicate, maxGapSeconds = 0.12, minDuration = 0.05) {
+      const segments = [];
+      let current = null;
+      let lastActive = null;
+      frames.forEach((frame, index) => {
+        if (predicate(frame)) {
+          if (!current) {
+            current = { start: frame.t, end: frame.t, startIndex: index, endIndex: index };
+          } else {
+            current.end = frame.t;
+            current.endIndex = index;
+          }
+          lastActive = frame.t;
+        } else if (current && lastActive !== null && frame.t - lastActive > maxGapSeconds) {
+          current.duration = current.end - current.start;
+          if (current.duration >= minDuration) segments.push(current);
+          current = null;
+          lastActive = null;
+        }
+      });
+      if (current) {
+        current.duration = current.end - current.start;
+        if (current.duration >= minDuration) segments.push(current);
+      }
+      return segments;
+    }
+
+    function classifyRisk(score) {
+      if (score >= 75) return { key: "stop", label: "หยุดและส่งต่อ", pill: "red" };
+      if (score >= 50) return { key: "high", label: "เสี่ยงสูง ต้องระวัง", pill: "red" };
+      if (score >= 25) return { key: "monitor", label: "ต้องติดตาม", pill: "amber" };
+      return { key: "normal", label: "ใกล้ normal-like", pill: "green" };
+    }
+
+    function recommendationFor(key, profile) {
+      if (key === "stop") return "หยุดทดสอบน้ำเอง ใช้ข้อมูลนี้คุยกับแพทย์/SLP โดยเฉพาะถ้ามีไอ เสียงเปียก หรือหายใจผิดปกติ";
+      if (key === "high") return "ทำซ้ำเฉพาะเมื่อปลอดภัยและมีผู้ดูแล ลดปริมาณจิบ ใช้แผนอาหารที่แพทย์กำหนด และนัดประเมินโดย SLP";
+      if (key === "monitor") return profile.patientMode === "known-stroke"
+        ? "บันทึกซ้ำเวลาเดิมทุกวัน ดูแนวโน้ม score ลดลงและอาการหลังกลืนลดลง"
+        : "ยังไม่ควรสรุปโรค ใช้เป็น screening และพบผู้เชี่ยวชาญถ้าคะแนนสูงซ้ำหรือมีอาการร่วม";
+      return profile.patientMode === "normal"
+        ? "ใช้เป็น baseline normal ได้ ควรวัด 3 ครั้งเพื่อสร้างค่าอ้างอิงส่วนตัว"
+        : "pattern รอบนี้ใกล้ปกติ แต่ยังควรดูอาการร่วมและแนวโน้มต่อเนื่อง";
+    }
+
+    function renderSwallowResult(result) {
+      $("riskLabel").textContent = result.category.label;
+      $("riskScore").textContent = `${result.score}`;
+      $("riskText").textContent = `${result.recommendation} | confidence ${result.confidence}%`;
+      $("riskNeedle").style.left = `${result.score}%`;
+      $("resultStatusPill").textContent = result.category.label;
+      $("resultStatusPill").className = `pill ${result.category.pill}`;
+
+      const rows = [
+        ["Signal quality", result.features.signalQuality ? "ดีพอ" : "ต่ำ", "ถ้าต่ำ ให้ขยับไมค์ใกล้คอ ลดเสียงรบกวน"],
+        ["Main swallow duration", `${result.features.mainDuration.toFixed(2)} s`, "ช่วง burst หลักของการกลืน"],
+        ["Swallow-like events", result.features.eventCount, "หลาย event ในจิบเดียวอาจสะท้อนการกลืนซ้ำ"],
+        ["Cough-like bursts", result.features.coughBursts, "burst หลังกลืนที่คล้ายไอ/กระแอม"],
+        ["Residual noise ratio", result.features.residualRatio.toFixed(2), "เสียงหลังกลืนเทียบก่อนกลืน"],
+        ["Spectral centroid", `${Math.round(result.features.spectralCentroid)} Hz`, "ตำแหน่งพลังงานเสียงโดยรวม"],
+        ["Peak RMS", result.features.maxRms.toFixed(4), "ความดังสูงสุดของสัญญาณ"],
+        ["Reasons", result.reasons.length ? result.reasons.join("; ") : "ไม่พบ trigger เสี่ยงเด่น", "เหตุผลที่เพิ่มคะแนนความเสี่ยง"]
+      ];
+      $("featureRows").innerHTML = `
+        <tr><th>Feature</th><th>Value</th><th>Meaning</th></tr>
+        ${rows.map(row => `<tr><td>${escapeHtml(row[0])}</td><td>${escapeHtml(String(row[1]))}</td><td>${escapeHtml(row[2])}</td></tr>`).join("")}
+      `;
+    }
+
+    function saveCurrentSwallow() {
+      if (!currentSwallowResult) return;
+      currentSwallowResult.profile = { ...app.profile };
+      currentSwallowResult.note = $("sessionNote").value || "";
+      app.sessions.push(currentSwallowResult);
+      saveState();
+      $("saveSwallowBtn").disabled = true;
+      toast("บันทึก swallow session แล้ว");
+    }
+
+    function labelSymptom(value) {
+      return {
+        cough: "ไอ/สำลัก",
+        wetVoice: "เสียงเปียก",
+        throatClear: "กระแอม",
+        residue: "รู้สึกค้าง",
+        drool: "น้ำลายไหล",
+        nasal: "ขึ้นจมูก"
+      }[value] || value;
+    }
+
+    function labelRedFlag(value) {
+      return {
+        breath: "หายใจลำบาก",
+        fever: "ไข้/ปอดอักเสบ",
+        weight: "น้ำหนักลด/ขาดน้ำ",
+        acuteStroke: "อาการ stroke เฉียบพลัน"
+      }[value] || value;
+    }
+
+    function clearCanvas(canvas, fill = "#fff") {
+      const ctx = canvas.getContext("2d");
+      ctx.fillStyle = fill;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function renderExercises() {
+      $("swallowExerciseList").innerHTML = swallowExercises.map(ex => exerciseTemplate(ex, "swallow")).join("");
+      $("faceExerciseList").innerHTML = faceExercises.map(ex => exerciseTemplate(ex, "face")).join("");
+      $all("[data-start-exercise]").forEach(btn => {
+        btn.addEventListener("click", () => startExerciseTimer(btn.dataset.startExercise, Number(btn.dataset.seconds), btn.dataset.group));
+      });
+      $all("[data-done-exercise]").forEach(btn => {
+        btn.addEventListener("click", () => completeExercise(btn.dataset.doneExercise, btn.dataset.group));
+      });
+    }
+
+    function exerciseTemplate(exercise, group) {
+      return `
+        <div class="exercise">
+          <div>
+            <h4>${escapeHtml(exercise.title)}</h4>
+            <p>${escapeHtml(exercise.desc)}</p>
+          </div>
+          <div class="button-row">
+            <span class="pill blue">${escapeHtml(exercise.tag)}</span>
+            <button class="btn ghost small-btn" data-start-exercise="${exercise.id}" data-seconds="${exercise.seconds}" data-group="${group}">จับเวลา</button>
+            <button class="btn green small-btn" data-done-exercise="${exercise.id}" data-group="${group}">เสร็จ</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function startExerciseTimer(id, seconds, group) {
+      clearInterval(activeTimer);
+      timerDeadline = Date.now() + seconds * 1000;
+      updateExerciseTimer();
+      activeTimer = setInterval(updateExerciseTimer, 250);
+      toast(`เริ่มจับเวลา ${id}`);
+      app.exerciseLogs.push({ id, group, action: "start", timestamp: nowIso() });
+      saveState();
+    }
+
+    function updateExerciseTimer() {
+      const left = Math.max(0, timerDeadline - Date.now());
+      const mm = String(Math.floor(left / 60000)).padStart(2, "0");
+      const ss = String(Math.ceil((left % 60000) / 1000)).padStart(2, "0");
+      $("exerciseTimer").textContent = `${mm}:${ss}`;
+      if (left <= 0) {
+        clearInterval(activeTimer);
+        if (timerDeadline) toast("ครบเวลา exercise แล้ว");
+        timerDeadline = 0;
+      }
+    }
+
+    function completeExercise(id, group) {
+      app.exerciseLogs.push({ id, group, action: "done", timestamp: nowIso() });
+      saveState();
+      toast("บันทึกว่าเสร็จแล้ว");
+    }
+
+    function initSpeech() {
+      renderPhrases();
+      loadVoices();
+      if ("speechSynthesis" in window) {
+        speechSynthesis.onvoiceschanged = loadVoices;
+      }
+      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (SR) {
+        recognition = new SR();
+        recognition.continuous = false;
+        recognition.interimResults = false;
+      }
+      $all("[data-lang]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          currentLang = btn.dataset.lang;
+          $all("[data-lang]").forEach(b => b.classList.toggle("active", b === btn));
+          loadVoices();
+          renderPhrases();
+        });
+      });
+      $("speechCategory").addEventListener("change", renderPhrases);
+      $("startVoiceBtn").addEventListener("click", startVoiceTest);
+      $("stopVoiceBtn").addEventListener("click", () => voiceRecorder?.stop());
+      $("saveVoiceBtn").addEventListener("click", saveVoiceResult);
+      $("startDdkBtn").addEventListener("click", startDdkTest);
+      $("manualTapBtn").addEventListener("click", () => {
+        manualDdkTaps += 1;
+        $("manualTaps").textContent = manualDdkTaps;
+        updateDdkScore();
+      });
+      $("saveDdkBtn").addEventListener("click", saveDdkResult);
+    }
+
+    function loadVoices() {
+      const select = $("voiceSelect");
+      const voices = speechSynthesis?.getVoices?.() || [];
+      const filtered = voices.filter(v => v.lang === currentLang || v.lang.startsWith(currentLang.slice(0, 2)));
+      const list = filtered.length ? filtered : voices;
+      select.innerHTML = list.map((voice, index) => `<option value="${index}">${escapeHtml(voice.name)} (${voice.lang})</option>`).join("");
+      if (!list.length) {
+        select.innerHTML = `<option value="">ใช้เสียง default ของ browser</option>`;
+      }
+      select.dataset.voiceNames = JSON.stringify(list.map(v => v.name));
+    }
+
+    function getSelectedVoice() {
+      const voices = speechSynthesis?.getVoices?.() || [];
+      const names = JSON.parse($("voiceSelect").dataset.voiceNames || "[]");
+      const name = names[Number($("voiceSelect").value)];
+      return voices.find(v => v.name === name) || voices.find(v => v.lang === currentLang) || null;
+    }
+
+    function renderPhrases() {
+      const category = $("speechCategory").value;
+      const phrases = phraseBank[currentLang][category] || phraseBank[currentLang].warmup;
+      $("phraseGrid").innerHTML = phrases.map(([target, desc], index) => `
+        <div class="phrase-card">
+          <div>
+            <div class="target">${escapeHtml(target)}</div>
+            <div class="desc">${escapeHtml(desc)}</div>
+          </div>
+          <div class="score-box">
+            <span id="phraseResult-${index}">ยังไม่วัด</span>
+            <b id="phraseScore-${index}">--</b>
+          </div>
+          <div class="button-row">
+            <button class="btn ghost small-btn" data-speak="${index}">ฟัง</button>
+            <button class="btn primary small-btn" data-recognize="${index}">พูดแล้ววัด</button>
+            <button class="btn green small-btn" data-manual-good="${index}">ชัด</button>
+          </div>
+        </div>
+      `).join("");
+      $all("[data-speak]").forEach(btn => {
+        btn.addEventListener("click", () => speakPhrase(phrases[Number(btn.dataset.speak)][0]));
+      });
+      $all("[data-recognize]").forEach(btn => {
+        btn.addEventListener("click", () => recognizePhrase(phrases[Number(btn.dataset.recognize)][0], Number(btn.dataset.recognize)));
+      });
+      $all("[data-manual-good]").forEach(btn => {
+        const index = Number(btn.dataset.manualGood);
+        btn.addEventListener("click", () => saveSpeechPhrase(phrases[index][0], phrases[index][0], 100, "manual"));
+      });
+    }
+
+    function speakPhrase(text) {
+      if (!("speechSynthesis" in window)) {
+        toast("บราวเซอร์นี้ไม่มี speechSynthesis");
+        return;
+      }
+      speechSynthesis.cancel();
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = currentLang;
+      const voice = getSelectedVoice();
+      if (voice) utter.voice = voice;
+      utter.rate = 0.82;
+      utter.pitch = 1;
+      speechSynthesis.speak(utter);
+    }
+
+    function recognizePhrase(target, index) {
+      if (!recognition) {
+        toast("Speech Recognition ไม่พร้อมใน browser นี้ ใช้ปุ่มชัดเพื่อบันทึกแบบ manual ได้");
+        return;
+      }
+      recognition.lang = currentLang;
+      $(`phraseResult-${index}`).textContent = "กำลังฟัง...";
+      recognition.onresult = event => {
+        const transcript = Array.from(event.results)
+          .map(result => result[0].transcript)
+          .join(" ");
+        const score = Math.round(similarityScore(target, transcript, currentLang));
+        $(`phraseResult-${index}`).textContent = transcript;
+        $(`phraseScore-${index}`).textContent = `${score}%`;
+        saveSpeechPhrase(target, transcript, score, "speechRecognition");
+      };
+      recognition.onerror = event => {
+        $(`phraseResult-${index}`).textContent = `ฟังไม่ได้: ${event.error}`;
+        $(`phraseScore-${index}`).textContent = "--";
+      };
+      recognition.start();
+    }
+
+    function normalizeText(text, lang) {
+      let out = text.toLowerCase().normalize("NFKC");
+      out = out.replace(/[.,!?;:'"()[\]{}]/g, "");
+      out = out.replace(/\s+/g, lang.startsWith("th") ? "" : " ").trim();
+      return out;
+    }
+
+    function similarityScore(target, actual, lang) {
+      const a = normalizeText(target, lang);
+      const b = normalizeText(actual, lang);
+      if (!a || !b) return 0;
+      const dist = levenshtein(a, b);
+      return clamp((1 - dist / Math.max(a.length, b.length)) * 100, 0, 100);
+    }
+
+    function levenshtein(a, b) {
+      const dp = Array.from({ length: a.length + 1 }, () => Array(b.length + 1).fill(0));
+      for (let i = 0; i <= a.length; i++) dp[i][0] = i;
+      for (let j = 0; j <= b.length; j++) dp[0][j] = j;
+      for (let i = 1; i <= a.length; i++) {
+        for (let j = 1; j <= b.length; j++) {
+          dp[i][j] = Math.min(
+            dp[i - 1][j] + 1,
+            dp[i][j - 1] + 1,
+            dp[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)
+          );
+        }
+      }
+      return dp[a.length][b.length];
+    }
+
+    function saveSpeechPhrase(target, transcript, score, method) {
+      app.speechLogs.push({
+        id: crypto.randomUUID?.() || String(Date.now()),
+        type: "speechPhrase",
+        timestamp: nowIso(),
+        lang: currentLang,
+        category: $("speechCategory").value,
+        target,
+        transcript,
+        score,
+        method,
+        note: $("speechNote").value || ""
+      });
+      saveState();
+      toast(`บันทึก speech score ${score}%`);
+    }
+
+    async function startVoiceTest() {
+      currentVoiceResult = null;
+      $("saveVoiceBtn").disabled = true;
+      $("startVoiceBtn").disabled = true;
+      $("stopVoiceBtn").disabled = false;
+      $("voiceStatePill").textContent = "กำลังวัด";
+      $("voiceStatePill").className = "pill red";
+      try {
+        voiceRecorder = createAudioFeatureRecorder({
+          maxSeconds: 8,
+          mode: "voice",
+          onFrame: ({ t }) => {
+            $("voiceDuration").textContent = `${t.toFixed(1)}s`;
+          },
+          onStop: payload => {
+            currentVoiceResult = analyzeVoice(payload.frames);
+            renderVoiceResult(currentVoiceResult);
+            $("startVoiceBtn").disabled = false;
+            $("stopVoiceBtn").disabled = true;
+            $("saveVoiceBtn").disabled = false;
+            $("voiceStatePill").textContent = "วิเคราะห์แล้ว";
+            $("voiceStatePill").className = "pill green";
+          }
+        });
+        await voiceRecorder.start();
+      } catch (error) {
+        console.error(error);
+        $("startVoiceBtn").disabled = false;
+        $("stopVoiceBtn").disabled = true;
+        $("voiceStatePill").textContent = "ไมค์เปิดไม่ได้";
+        $("voiceStatePill").className = "pill red";
+      }
+    }
+
+    function analyzeVoice(frames) {
+      const rms = frames.map(f => f.rms);
+      const threshold = Math.max(median(rms) * 1.25, 0.018);
+      const voiced = frames.filter(f => f.rms > threshold);
+      const voicedSegments = detectSegments(frames, f => f.rms > threshold, 0.2, 0.15);
+      const longest = voicedSegments.reduce((best, seg) => Math.max(best, seg.duration), 0);
+      const voicedRms = voiced.map(f => f.rms);
+      const pitches = voiced.map(f => f.pitch).filter(Boolean).filter(p => p > 70 && p < 400);
+      const loudStability = clamp((1 - std(voicedRms) / Math.max(mean(voicedRms), 1e-5)) * 100, 0, 100);
+      const pitchStability = pitches.length >= 6 ? clamp((1 - std(pitches) / Math.max(mean(pitches), 1e-5)) * 100, 0, 100) : 40;
+      const durationScore = clamp(longest / 6 * 100, 0, 100);
+      const score = Math.round(durationScore * 0.4 + loudStability * 0.35 + pitchStability * 0.25);
+      return {
+        id: crypto.randomUUID?.() || String(Date.now()),
+        type: "voice",
+        timestamp: nowIso(),
+        duration: longest,
+        loudStability,
+        pitchStability,
+        score,
+        avgPitch: mean(pitches),
+        note: $("speechNote").value || ""
+      };
+    }
+
+    function renderVoiceResult(result) {
+      $("voiceDuration").textContent = `${result.duration.toFixed(1)}s`;
+      $("voiceStability").textContent = `${Math.round(result.loudStability)}%`;
+      $("pitchStability").textContent = `${Math.round(result.pitchStability)}%`;
+      $("voiceScore").textContent = `${result.score}`;
+    }
+
+    function saveVoiceResult() {
+      if (!currentVoiceResult) return;
+      app.speechLogs.push(currentVoiceResult);
+      saveState();
+      $("saveVoiceBtn").disabled = true;
+      toast("บันทึก voice score แล้ว");
+    }
+
+    async function startDdkTest() {
+      manualDdkTaps = 0;
+      currentDdkResult = null;
+      $("manualTaps").textContent = "0";
+      $("ddkPeaks").textContent = "0";
+      $("ddkRate").textContent = "--";
+      $("ddkScore").textContent = "--";
+      $("saveDdkBtn").disabled = true;
+      $("startDdkBtn").disabled = true;
+      $("ddkStatePill").textContent = "กำลังฟัง 10s";
+      $("ddkStatePill").className = "pill red";
+      try {
+        ddkRecorder = createAudioFeatureRecorder({
+          maxSeconds: 10,
+          mode: "ddk",
+          onFrame: () => {
+            const peaks = countDdkPeaks(ddkRecorder.frames);
+            $("ddkPeaks").textContent = peaks;
+            currentDdkResult = buildDdkResult(peaks, manualDdkTaps);
+            updateDdkScore();
+          },
+          onStop: payload => {
+            const peaks = countDdkPeaks(payload.frames);
+            currentDdkResult = buildDdkResult(peaks, manualDdkTaps);
+            renderDdkResult(currentDdkResult);
+            $("saveDdkBtn").disabled = false;
+            $("startDdkBtn").disabled = false;
+            $("ddkStatePill").textContent = "วิเคราะห์แล้ว";
+            $("ddkStatePill").className = "pill green";
+          }
+        });
+        await ddkRecorder.start();
+      } catch (error) {
+        console.error(error);
+        $("startDdkBtn").disabled = false;
+        $("ddkStatePill").textContent = "ไมค์เปิดไม่ได้";
+        $("ddkStatePill").className = "pill red";
+      }
+    }
+
+    function countDdkPeaks(frames) {
+      if (frames.length < 5) return 0;
+      const rms = frames.map(f => f.rms);
+      const threshold = Math.max(percentile(rms, 70), median(rms) * 1.7, 0.02);
+      let count = 0;
+      let lastPeakTime = -1;
+      for (let i = 1; i < frames.length - 1; i++) {
+        const f = frames[i];
+        if (f.rms > threshold && f.rms > frames[i - 1].rms && f.rms >= frames[i + 1].rms) {
+          if (lastPeakTime < 0 || f.t - lastPeakTime > 0.12) {
+            count++;
+            lastPeakTime = f.t;
+          }
+        }
+      }
+      return count;
+    }
+
+    function buildDdkResult(autoPeaks, manualTaps) {
+      const count = manualTaps > 0 ? manualTaps : autoPeaks;
+      const rate = count / 10;
+      const score = Math.round(clamp(rate / 6 * 100, 0, 100));
+      return {
+        id: crypto.randomUUID?.() || String(Date.now()),
+        type: "ddk",
+        timestamp: nowIso(),
+        autoPeaks,
+        manualTaps,
+        rate,
+        score,
+        lang: currentLang,
+        note: $("speechNote").value || ""
+      };
+    }
+
+    function updateDdkScore() {
+      if (!ddkRecorder?.frames?.length) return;
+      currentDdkResult = buildDdkResult(countDdkPeaks(ddkRecorder.frames), manualDdkTaps);
+      renderDdkResult(currentDdkResult);
+    }
+
+    function renderDdkResult(result) {
+      $("ddkPeaks").textContent = result.autoPeaks;
+      $("manualTaps").textContent = result.manualTaps;
+      $("ddkRate").textContent = `${result.rate.toFixed(1)}/s`;
+      $("ddkScore").textContent = `${result.score}`;
+    }
+
+    function saveDdkResult() {
+      if (!currentDdkResult) return;
+      app.speechLogs.push(currentDdkResult);
+      saveState();
+      $("saveDdkBtn").disabled = true;
+      toast("บันทึก DDK แล้ว");
+    }
+
+    function initFace() {
+      renderFaceRatings();
+      $("startCameraBtn").addEventListener("click", startCamera);
+      $("stopCameraBtn").addEventListener("click", stopCamera);
+      $("saveFaceBtn").addEventListener("click", saveFaceScore);
+    }
+
+    function renderFaceRatings() {
+      $("faceRatings").innerHTML = faceRatingItems.map(([id, label]) => `
+        <div class="rating-row">
+          <label for="face-${id}">${escapeHtml(label)}</label>
+          <input id="face-${id}" type="range" min="0" max="5" step="1" value="3" data-face-rating="${id}">
+          <b id="face-value-${id}">3</b>
+        </div>
+      `).join("");
+      $all("[data-face-rating]").forEach(input => {
+        input.addEventListener("input", () => {
+          $(`face-value-${input.dataset.faceRating}`).textContent = input.value;
+        });
+      });
+    }
+
+    async function startCamera() {
+      if (!navigator.mediaDevices?.getUserMedia) {
+        toast("บราวเซอร์นี้ไม่รองรับกล้อง");
+        return;
+      }
+      try {
+        cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false });
+        $("mirrorVideo").srcObject = cameraStream;
+        $("startCameraBtn").disabled = true;
+        $("stopCameraBtn").disabled = false;
+        $("cameraStatePill").textContent = "กล้องเปิด";
+        $("cameraStatePill").className = "pill green";
+      } catch (error) {
+        console.error(error);
+        toast("เปิดกล้องไม่ได้: ตรวจ permission");
+      }
+    }
+
+    function stopCamera() {
+      cameraStream?.getTracks().forEach(track => track.stop());
+      cameraStream = null;
+      $("mirrorVideo").srcObject = null;
+      $("startCameraBtn").disabled = false;
+      $("stopCameraBtn").disabled = true;
+      $("cameraStatePill").textContent = "กล้องปิด";
+      $("cameraStatePill").className = "pill";
+    }
+
+    function saveFaceScore() {
+      const ratings = {};
+      $all("[data-face-rating]").forEach(input => {
+        ratings[input.dataset.faceRating] = Number(input.value);
+      });
+      const avg = mean(Object.values(ratings));
+      app.faceLogs.push({
+        id: crypto.randomUUID?.() || String(Date.now()),
+        type: "face",
+        timestamp: nowIso(),
+        ratings,
+        score: Math.round(avg / 5 * 100),
+        weakSide: app.profile.weakSide,
+        note: $("faceNote").value || ""
+      });
+      saveState();
+      toast("บันทึก face score แล้ว");
+    }
+
+    function refreshDashboard() {
+      const sessions = app.sessions;
+      const latest = sessions.at(-1);
+      $("sideRisk").textContent = latest ? `${latest.score}` : "ยังไม่มีข้อมูล";
+      $("sideRisk").style.color = latest ? riskColor(latest.score) : "";
+      const improvement = computeImprovement();
+      $("sideImprove").textContent = improvement === null ? "-" : `${improvement > 0 ? "+" : ""}${improvement}`;
+      $("sideToday").textContent = `${countTodayDone()} รายการ`;
+      $("totalSwallowSessions").textContent = sessions.length;
+      const last7 = sessions.slice(-7).map(s => s.score);
+      $("avgRisk").textContent = last7.length ? Math.round(mean(last7)) : "--";
+      $("trendImprove").textContent = improvement === null ? "--" : `${improvement > 0 ? "+" : ""}${improvement}`;
+      $("totalRehabLogs").textContent = app.speechLogs.length + app.faceLogs.length;
+      drawTrendChart($("trendCanvas"), sessions.map(s => ({ x: s.timestamp, y: s.score })), {
+        title: "Swallow risk",
+        minY: 0,
+        maxY: 100,
+        color: "#b91c1c",
+        invertGood: true
+      });
+      const speechPoints = [
+        ...app.speechLogs.map(log => ({ x: log.timestamp, y: log.score ?? 0, type: log.type })),
+        ...app.faceLogs.map(log => ({ x: log.timestamp, y: log.score ?? 0, type: "face" }))
+      ].sort((a, b) => new Date(a.x) - new Date(b.x));
+      drawTrendChart($("speechTrendCanvas"), speechPoints, {
+        title: "Speech / Face score",
+        minY: 0,
+        maxY: 100,
+        color: "#0f766e",
+        invertGood: false
+      });
+      renderHistory();
+    }
+
+    function computeImprovement() {
+      if (app.sessions.length < 2) return null;
+      const baseline = mean(app.sessions.slice(0, Math.min(3, app.sessions.length)).map(s => s.score));
+      const recent = mean(app.sessions.slice(-Math.min(3, app.sessions.length)).map(s => s.score));
+      return Math.round(baseline - recent);
+    }
+
+    function countTodayDone() {
+      const today = new Date().toDateString();
+      return app.exerciseLogs.filter(log => log.action === "done" && new Date(log.timestamp).toDateString() === today).length;
+    }
+
+    function riskColor(score) {
+      if (score >= 75) return "#fecaca";
+      if (score >= 50) return "#fed7aa";
+      if (score >= 25) return "#fde68a";
+      return "#bbf7d0";
+    }
+
+    function drawTrendChart(canvas, points, options) {
+      const ctx = canvas.getContext("2d");
+      const w = canvas.width;
+      const h = canvas.height;
+      ctx.clearRect(0, 0, w, h);
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(0, 0, w, h);
+      const pad = { l: 48, r: 18, t: 26, b: 38 };
+      ctx.strokeStyle = "#d9e2ec";
+      ctx.lineWidth = 1;
+      for (let i = 0; i <= 4; i++) {
+        const y = pad.t + (h - pad.t - pad.b) * i / 4;
+        ctx.beginPath();
+        ctx.moveTo(pad.l, y);
+        ctx.lineTo(w - pad.r, y);
+        ctx.stroke();
+        const label = Math.round(options.maxY - (options.maxY - options.minY) * i / 4);
+        ctx.fillStyle = "#64748b";
+        ctx.font = "12px sans-serif";
+        ctx.fillText(label, 10, y + 4);
+      }
+      ctx.fillStyle = "#18212f";
+      ctx.font = "700 14px sans-serif";
+      ctx.fillText(options.title, pad.l, 18);
+      if (!points.length) {
+        ctx.fillStyle = "#64748b";
+        ctx.font = "14px sans-serif";
+        ctx.fillText("ยังไม่มีข้อมูล", pad.l, h / 2);
+        return;
+      }
+      const xs = points.map(p => new Date(p.x).getTime());
+      const minX = Math.min(...xs);
+      const maxX = Math.max(...xs);
+      const plotW = w - pad.l - pad.r;
+      const plotH = h - pad.t - pad.b;
+      function xScale(x) {
+        if (maxX === minX) return pad.l + plotW / 2;
+        return pad.l + (new Date(x).getTime() - minX) / (maxX - minX) * plotW;
+      }
+      function yScale(y) {
+        return pad.t + (options.maxY - y) / (options.maxY - options.minY) * plotH;
+      }
+      ctx.strokeStyle = options.color;
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      points.forEach((point, index) => {
+        const x = xScale(point.x);
+        const y = yScale(point.y);
+        if (index === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      });
+      ctx.stroke();
+      points.forEach(point => {
+        const x = xScale(point.x);
+        const y = yScale(point.y);
+        ctx.beginPath();
+        ctx.arc(x, y, 5, 0, Math.PI * 2);
+        ctx.fillStyle = pointColor(point.y, options.invertGood);
+        ctx.fill();
+        ctx.strokeStyle = "#fff";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      });
+      const firstDate = formatShortDate(points[0].x);
+      const lastDate = formatShortDate(points.at(-1).x);
+      ctx.fillStyle = "#64748b";
+      ctx.font = "12px sans-serif";
+      ctx.fillText(firstDate, pad.l, h - 12);
+      ctx.textAlign = "right";
+      ctx.fillText(lastDate, w - pad.r, h - 12);
+      ctx.textAlign = "left";
+    }
+
+    function pointColor(value, invertGood) {
+      if (invertGood) {
+        if (value >= 75) return "#b91c1c";
+        if (value >= 50) return "#f97316";
+        if (value >= 25) return "#eab308";
+        return "#16a34a";
+      }
+      if (value >= 75) return "#16a34a";
+      if (value >= 50) return "#0f766e";
+      if (value >= 25) return "#eab308";
+      return "#b91c1c";
+    }
+
+    function formatShortDate(iso) {
+      return new Intl.DateTimeFormat("th-TH", { month: "short", day: "numeric" }).format(new Date(iso));
+    }
+
+    function renderHistory() {
+      const rows = [
+        ...app.sessions.map(s => ({
+          time: s.timestamp,
+          kind: "Swallow",
+          score: s.score,
+          detail: `${s.category?.label || ""} | duration ${(s.features?.mainDuration || 0).toFixed(2)}s | cough ${s.features?.coughBursts ?? 0}`
+        })),
+        ...app.speechLogs.map(s => ({
+          time: s.timestamp,
+          kind: s.type === "speechPhrase" ? "Speech phrase" : s.type === "voice" ? "Voice" : "DDK",
+          score: s.score,
+          detail: s.target ? `${s.lang}: ${s.target} -> ${s.transcript}` : s.type === "voice" ? `duration ${s.duration?.toFixed(1)}s` : `rate ${s.rate?.toFixed(1)}/s`
+        })),
+        ...app.faceLogs.map(s => ({
+          time: s.timestamp,
+          kind: "Face",
+          score: s.score,
+          detail: `weak side ${s.weakSide}; ${s.note || ""}`
+        }))
+      ].sort((a, b) => new Date(b.time) - new Date(a.time));
+
+      if (!rows.length) {
+        $("historyTableWrap").innerHTML = `<div class="empty">ยังไม่มีประวัติ กดบันทึกผลหลังวัดเพื่อสร้างกราฟ</div>`;
+        return;
+      }
+      $("historyTableWrap").innerHTML = `
+        <table class="history-table">
+          <thead><tr><th>เวลา</th><th>ชนิด</th><th>คะแนน</th><th>รายละเอียด</th></tr></thead>
+          <tbody>
+            ${rows.map(row => `
+              <tr>
+                <td>${escapeHtml(formatDate(row.time))}</td>
+                <td>${escapeHtml(row.kind)}</td>
+                <td><b>${escapeHtml(String(row.score ?? "--"))}</b></td>
+                <td>${escapeHtml(row.detail || "")}</td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function exportCsv() {
+      const rows = [["timestamp", "kind", "score", "detail"]];
+      app.sessions.forEach(s => rows.push([s.timestamp, "swallow", s.score, JSON.stringify(s.features)]));
+      app.speechLogs.forEach(s => rows.push([s.timestamp, s.type, s.score ?? "", JSON.stringify(s)]));
+      app.faceLogs.forEach(s => rows.push([s.timestamp, "face", s.score, JSON.stringify(s.ratings)]));
+      downloadText("rehab-data.csv", rows.map(row => row.map(csvCell).join(",")).join("\n"), "text/csv;charset=utf-8");
+    }
+
+    function csvCell(value) {
+      const text = String(value ?? "");
+      return `"${text.replace(/"/g, '""')}"`;
+    }
+
+    function exportJson() {
+      downloadText("rehab-data.json", JSON.stringify(app, null, 2), "application/json;charset=utf-8");
+    }
+
+    function downloadText(filename, text, mime) {
+      const blob = new Blob([text], { type: mime });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    function bindDataTools() {
+      $("exportCsvBtn").addEventListener("click", exportCsv);
+      $("exportJsonBtn").addEventListener("click", exportJson);
+      $("downloadJsonBtn").addEventListener("click", exportJson);
+      $("importJsonInput").addEventListener("change", async event => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+        try {
+          const text = await file.text();
+          const imported = JSON.parse(text);
+          app = {
+            ...structuredClone(defaultState),
+            ...imported,
+            profile: { ...defaultState.profile, ...(imported.profile || {}) }
+          };
+          saveState();
+          bindProfileValuesOnly();
+          refreshDashboard();
+          toast("นำเข้าข้อมูลแล้ว");
+        } catch (error) {
+          console.error(error);
+          toast("นำเข้า JSON ไม่สำเร็จ");
+        }
+      });
+      $("clearDataBtn").addEventListener("click", () => {
+        if (!confirm("ล้างข้อมูลทั้งหมดใน browser นี้?")) return;
+        localStorage.removeItem(STORAGE_KEY);
+        app = structuredClone(defaultState);
+        bindProfileValuesOnly();
+        refreshDashboard();
+        toast("ล้างข้อมูลแล้ว");
+      });
+      $("quickSaveBtn").addEventListener("click", () => {
+        app.exerciseLogs.push({ id: "snapshot", group: "general", action: "snapshot", timestamp: nowIso() });
+        saveState();
+        toast("บันทึก snapshot เวลาใช้งานแล้ว");
+      });
+    }
+
+    function bindProfileValuesOnly() {
+      Object.keys(app.profile).forEach(key => {
+        const el = $(key);
+        if (el) el.value = app.profile[key] ?? "";
+      });
+      $("clinicianPlan").value = app.profile.clinicianPlan || "";
+      updateSafetyBox();
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function bindSwallow() {
+      $("startSwallowBtn").addEventListener("click", startSwallowRecording);
+      $("stopSwallowBtn").addEventListener("click", stopSwallowRecording);
+      $("analyzeSwallowBtn").addEventListener("click", analyzeCurrentSwallow);
+      $("saveSwallowBtn").addEventListener("click", saveCurrentSwallow);
+      clearCanvas($("waveCanvas"), "#0f172a");
+      clearCanvas($("spectrogramCanvas"), "#0f172a");
+    }
+
+    function init() {
+      bindNavigation();
+      bindProfile();
+      bindSwallow();
+      renderExercises();
+      initSpeech();
+      initFace();
+      bindDataTools();
+      refreshDashboard();
+    }
+
+    document.addEventListener("DOMContentLoaded", init);
+  </script>
+</body>
+</html>
